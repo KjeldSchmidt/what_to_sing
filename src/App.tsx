@@ -1,26 +1,46 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+} from "react-router-dom";
+import UserSongPage from './pages/UserSongPage';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+    authorize_button() {
+        window.location.assign(
+            "https://accounts.spotify.com/authorize?" +
+            `client_id=${encodeURIComponent("a1d12ab8319041b4a34966a7dc86c021")}&` +
+            "response_type=token&" +
+            `redirect_uri=${encodeURIComponent("http://localhost:3000/authorisation_callback")}&` +
+            `scope=${encodeURIComponent("user-library-read playlist-read-private playlist-read-collaborative user-top-read")}`
+
+        );
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <Router>
+                    <Switch>
+                        <Route path="/authorisation_callback">
+                            <UserSongPage/>
+                        </Route>
+                        <Route path="/">
+                            <header className="App-header">
+                                <img src={logo} className="App-logo" alt="logo" />
+                                <button onClick={this.authorize_button}>
+                                    Find songs now!
+                                </button>
+                            </header>
+                        </Route>
+                    </Switch>
+                </Router>
+            </div>
+        );
+    }
 }
 
 export default App;
