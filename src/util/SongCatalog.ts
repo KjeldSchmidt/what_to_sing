@@ -7,7 +7,12 @@ export default class SongCatalog {
     constructor() {
         this.songs = catalog.split('\n')
             .map((line) => line.split(';'))
-            .map( ( splitLine ) => {return {artist: splitLine[0], title: splitLine[1]}})
+            .map( ( splitLine ) => {
+                return {
+                    artist: splitLine[0],
+                    title: splitLine[1]
+                }
+            })
     }
 
     hasSong( song: Song ): boolean {

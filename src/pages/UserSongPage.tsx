@@ -12,8 +12,6 @@ type UserSongState = {
     karaokeSongs: Song[]
 }
 
-
-
 class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     private catalog: SongCatalog = new SongCatalog();
     private spotifyAPI : SpotifyAPI;

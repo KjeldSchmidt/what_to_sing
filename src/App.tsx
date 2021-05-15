@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {
     BrowserRouter as Router,
@@ -29,12 +28,9 @@ class App extends React.Component {
                             <UserSongPage/>
                         </Route>
                         <Route path="/">
-                            <header className="App-header">
-                                <img src={logo} className="App-logo" alt="logo" />
-                                <button onClick={this.authorize_button}>
-                                    Find songs now!
-                                </button>
-                            </header>
+                            <Button onClick={this.authorize_button}>
+                                Find songs now!
+                            </Button>
                         </Route>
                     </Switch>
                 </Router>
