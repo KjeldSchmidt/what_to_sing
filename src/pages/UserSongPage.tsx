@@ -10,32 +10,32 @@ type UserSongProps = {
 type UserSongState = {
     accessToken: string,
     songs: Song[],
-    karafunCatalog: SongCatalog
 }
 
 
 
 class UserSongPage extends React.Component<UserSongProps, UserSongState> {
+    private catalog: SongCatalog = new SongCatalog();
+
     constructor(props: UserSongProps) {
+        super(props);
         const hashFragment = window.location.hash;
         const accessToken = hashFragment.slice(1).split('&')[0].split('=')[1];
-        super(props);
 
         this.state = {
             songs: [],
             accessToken: accessToken,
-            karafunCatalog: new SongCatalog()
         }
     }
 
     componentDidMount() {
-        SpotifyAPI.topTracks(this.state.accessToken)
-            .then( (items : SpotifySong[]) => {
-                const songs = items.map((item) => {
-                    return {artist: item.artists[0].name, title: item.name}
-                })
-
-                this.setState({ songs:songs })
+        SpotifyAPI.topTracks(this.state.accessToken, 200)
+            .then( (songs : SpotifySong[]) =>
+                songs.map((song) => { return {title: song.name, artist: song.artists[0].name}})
+            )
+            .then( (songs: Song[]) => {
+                const matches = this.catalog.findMatches(songs);
+                this.setState({ songs: matches });
             })
     }
 
