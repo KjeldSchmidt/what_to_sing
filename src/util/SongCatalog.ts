@@ -12,9 +12,9 @@ export default class SongCatalog {
 
     hasSong( song: Song ): boolean {
         return this.songs
-            .filter((candidate) => candidate.artist === song.artist)
-            .filter((candidate) => candidate.title === song.title )
-            .length !== 0
+            .some( candidate => {
+                return song.artist === candidate.artist && song.title === candidate.title
+            })
     }
 
     findMatches( songs: Song[] ) : Song[] {
