@@ -6,11 +6,23 @@ export type SpotifyArtist = {
 
 }
 
+export type SpotifyImage = {
+    height: number,
+    width: number,
+    url: string
+}
+
+export type SpotifyAlbum = {
+    name: string,
+    images: SpotifyImage[]
+}
+
 export type SpotifySong = {
     name: string
     artists: SpotifyArtist[]
     id: string,
     popularity: number
+    album: SpotifyAlbum
 }
 
 type PlaylistMember = {
@@ -97,11 +109,16 @@ class SpotifyAPI {
             .then( (response) => response.json() )
             .then( (json) => json.items )
             .then( (items : PlaylistMember[]) => items.map( item => item.track))
+            .then( track => { console.dir(track); return track; } )
             .then( (songs) => songs.map(SpotifyAPI.toSong))
     }
 
     static toSong(spotifySong : SpotifySong ) : Song  {
-        return {title: spotifySong.name, artist: spotifySong.artists[0].name}
+        return {
+            title: spotifySong.name,
+            artist: spotifySong.artists[0].name,
+            albumArtUrl: spotifySong.album.images[2].url
+        }
     }
 }
 

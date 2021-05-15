@@ -62,8 +62,8 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
          <div>
              Songs:
              {this.state.karaokeSongs.map( (song) => {
-                 return (<div key={song.artist + song.title}>{song.artist}: {song.title}</div>)
              })}
+                     return (<SongContainer key={song.artist + song.title} song={song}/>)
          </div>
         );
     }
