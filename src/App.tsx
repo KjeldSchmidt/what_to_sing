@@ -1,11 +1,23 @@
 import React from 'react';
-import './App.css';
+
 import {
     BrowserRouter as Router,
     Switch,
     Route
 } from "react-router-dom";
 import UserSongPage from './pages/UserSongPage';
+import {Button, createMuiTheme, CssBaseline, MuiThemeProvider} from '@material-ui/core';
+
+const theme = createMuiTheme({
+    palette: {
+        background: {
+            default: "#34343A"
+        },
+        text: {
+            primary: "#DDDDDD"
+        }
+    }
+})
 
 class App extends React.Component {
     authorize_button() {
@@ -22,6 +34,8 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
+                <MuiThemeProvider theme={theme}>
+                <CssBaseline />
                 <Router>
                     <Switch>
                         <Route path="/authorisation_callback">
@@ -34,6 +48,7 @@ class App extends React.Component {
                         </Route>
                     </Switch>
                 </Router>
+                </MuiThemeProvider>
             </div>
         );
     }

@@ -2,9 +2,11 @@ import React from "react";
 import SpotifyAPI from "../api/SpotifyAPI";
 import SongCatalog from "../util/SongCatalog";
 import {Song} from "../types/SongType";
+import SongContainer from "../components/SongContainer";
+import {withStyles} from "@material-ui/core";
 
 type UserSongProps = {
-
+    classes: any
 }
 
 type UserSongState = {
@@ -58,15 +60,37 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     }
 
     render() {
+        const { classes } = this.props;
         return (
-         <div>
-             Songs:
-             {this.state.karaokeSongs.map( (song) => {
-             })}
+         <div className={classes.root}>
+             <h4 className={classes.header}>
+                 Songs:
+             </h4>
+             <div className={classes.songsContainer}>
+                 {this.state.karaokeSongs.map( (song) => {
                      return (<SongContainer key={song.artist + song.title} song={song}/>)
+                 })}
+             </div>
          </div>
         );
     }
 }
 
-export default UserSongPage;
+
+const styles = {
+    root: {
+        align: "center",
+        width: "100%"
+    },
+    header: {
+        fontFamily: "'Arima Madurai', cursive",
+        fontSize: "2rem"
+    },
+    songsContainer: {
+        display: "flex",
+        width: "100%",
+        flexWrap: "wrap" as "wrap"
+    }
+}
+
+export default withStyles(styles)(UserSongPage);
