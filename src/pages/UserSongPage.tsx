@@ -1,18 +1,16 @@
 import React from "react";
 import SpotifyAPI, {SpotifySong} from "../api/SpotifyAPI";
+import SongCatalog from "../util/SongCatalog";
+import {Song} from "../types/SongType";
 
 type UserSongProps = {
 
 }
 
-type Song = {
-    artist: string,
-    title: string
-}
-
 type UserSongState = {
     accessToken: string,
-    songs: Song[]
+    songs: Song[],
+    karafunCatalog: SongCatalog
 }
 
 
@@ -25,7 +23,8 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
 
         this.state = {
             songs: [],
-            accessToken: accessToken
+            accessToken: accessToken,
+            karafunCatalog: new SongCatalog()
         }
     }
 
