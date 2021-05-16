@@ -64,13 +64,16 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         return (
          <div className={classes.root}>
              <h4 className={classes.header}>
-                 Songs:
+                 Your top songs:
              </h4>
              <div className={classes.songsContainer}>
                  {this.state.karaokeSongs.map( (song) => {
                      return (<SongContainer key={song.artist + song.title} song={song}/>)
                  })}
              </div>
+             <h4 className={classes.header}>
+                 Songs from your playlists:
+             </h4>
          </div>
         );
     }
@@ -84,12 +87,17 @@ const styles = {
     },
     header: {
         fontFamily: "'Arima Madurai', cursive",
-        fontSize: "2rem"
+        fontSize: "2rem",
+        textAlign: "center" as "center",
+        marginBottom: 0,
+        color: "#FFFFFF"
     },
     songsContainer: {
         display: "flex",
         width: "100%",
-        flexWrap: "wrap" as "wrap"
+        flexWrap: "wrap" as "wrap",
+        justifyContent: "center",
+        padding: "2rem"
     }
 }
 

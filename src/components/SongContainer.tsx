@@ -17,9 +17,14 @@ const styles = {
         justifyContent: "space-between",
         padding: "0.5rem",
         margin: 3,
+        alignItems: "center"
     },
     title: {
         fontSize: "1.5rem"
+    },
+    albumImage: {
+        width: 64,
+        height: 64
     }
 }
 

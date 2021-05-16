@@ -3,7 +3,6 @@ import {Song} from "../types/SongType";
 export type SpotifyArtist = {
     name: string,
     id: string,
-
 }
 
 export type SpotifyImage = {
