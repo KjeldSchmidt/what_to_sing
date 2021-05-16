@@ -11,6 +11,7 @@ type SongContainerState = Record<string, never>
 const styles = {
     root: {
         border: "1px solid black",
+        borderRadius: 3,
         background: colors.objectBackground,
         width: 400,
         display: "flex",

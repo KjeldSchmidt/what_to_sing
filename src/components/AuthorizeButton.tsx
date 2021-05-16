@@ -8,7 +8,7 @@ const styles = {
         background: colors.objectBackground,
         color: colors.textColor,
         fontSize: "2rem",
-        borderRadius: 5,
+        borderRadius: 3,
         padding: "1rem",
         "&:hover": {
             background: colors.objectHoverColor,

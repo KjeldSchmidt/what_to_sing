@@ -11,8 +11,10 @@ interface UserSongProps extends WithStyles<typeof styles>, RouteComponentProps {
 }
 
 type UserSongState = {
-    favoriteSongs: Song[],
-    karaokeSongs: Song[]
+    checkedSongs: Song[],
+    topAvailableSongs: Song[],
+    playlistAvailableSongs: Song[],
+    artistAvailableSongs: Song[],
 }
 
 class UserSongPage extends React.Component<UserSongProps, UserSongState> {
@@ -36,16 +38,36 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         }
 
         this.state = {
-            favoriteSongs: [],
-            karaokeSongs: []
+            checkedSongs: [],
+            topAvailableSongs: [],
+            playlistAvailableSongs: [],
+            artistAvailableSongs: []
         }
     }
 
-    addFavoriteSongs( songs: Song[] ) : void {
-        const newFavorite : Song[] = [];
-        songs.forEach( song => {
-            const entryExists = this.state.favoriteSongs
-                .some( candidate => {
+    addTopSongs(songs: Song[] ) : void {
+        const {newFavorite, newKaraoke} = this.extractNew(songs);
+
+        this.setState({
+            checkedSongs: [...this.state.checkedSongs, ...newFavorite],
+            topAvailableSongs: [...this.state.topAvailableSongs, ...newKaraoke],
+        });
+    }
+
+    addPlaylistSongs(songs: Song[] ) : void {
+        const {newFavorite, newKaraoke} = this.extractNew(songs);
+
+        this.setState({
+            checkedSongs: [...this.state.checkedSongs, ...newFavorite],
+            playlistAvailableSongs: [...this.state.playlistAvailableSongs, ...newKaraoke],
+        });
+    }
+
+    private extractNew(songs: Song[]) {
+        const newFavorite: Song[] = [];
+        songs.forEach(song => {
+            const entryExists = this.state.checkedSongs
+                .some(candidate => {
                     return song.artist === candidate.artist && song.title === candidate.title
                 });
 
@@ -55,11 +77,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         });
 
         const newKaraoke = this.catalog.findMatches(newFavorite);
-
-        this.setState({
-            favoriteSongs: [...this.state.favoriteSongs, ...newFavorite],
-            karaokeSongs: [...this.state.karaokeSongs, ...newKaraoke],
-        });
+        return {newFavorite, newKaraoke};
     }
 
     componentDidMount() {
@@ -76,13 +94,13 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
 
         this.spotifyAPI.topTracks()
             .then(
-                (topTracks: Song[]) => this.addFavoriteSongs(topTracks),
+                (topTracks: Song[]) => this.addTopSongs(topTracks),
                 onNotAuthorized
             )
 
         this.spotifyAPI.songsFromPlaylists()
             .then(
-                (playlistTracks: Song[]) => this.addFavoriteSongs(playlistTracks),
+                (playlistTracks: Song[]) => this.addPlaylistSongs(playlistTracks),
                 onNotAuthorized
             )
     }
@@ -95,13 +113,18 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
                  Your top songs:
              </h4>
              <div className={classes.songsContainer}>
-                 {this.state.karaokeSongs.map( (song) => {
+                 {this.state.topAvailableSongs.map( (song) => {
                      return (<SongContainer key={song.artist + song.title} song={song}/>)
                  })}
              </div>
              <h4 className={classes.header}>
                  Songs from your playlists:
              </h4>
+             <div className={classes.songsContainer}>
+                 {this.state.playlistAvailableSongs.map( (song) => {
+                     return (<SongContainer key={song.artist + song.title} song={song}/>)
+                 })}
+             </div>
          </div>
         );
     }
@@ -114,7 +137,6 @@ const styles = {
         width: "100%"
     },
     header: {
-        fontFamily: "'Arima Madurai', cursive",
         fontSize: "2rem",
         textAlign: "center" as const,
         marginBottom: 0,
