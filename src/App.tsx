@@ -4,14 +4,15 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import UserSongPage from './pages/UserSongPage';
 import {createMuiTheme, CssBaseline, MuiThemeProvider} from '@material-ui/core';
 import LandingPage from "./pages/LandingPage";
+import colors from "./theme/colors";
 
 const theme = createMuiTheme({
     palette: {
         background: {
-            default: "#34343A"
+            default: colors.pageBackground
         },
         text: {
-            primary: "#DDDDDD"
+            primary: colors.textColor
         }
     }
 })

@@ -73,7 +73,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
                 }
             );
         };
-        
+
         this.spotifyAPI.topTracks()
             .then(
                 (topTracks: Song[]) => this.addFavoriteSongs(topTracks),

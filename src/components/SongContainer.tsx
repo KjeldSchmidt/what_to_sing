@@ -1,6 +1,7 @@
 import React from "react";
 import {Song} from "../types/SongType";
 import {WithStyles, withStyles} from "@material-ui/core";
+import colors from "../theme/colors";
 
 interface SongContainerProps extends WithStyles<typeof styles> {
     song: Song,
@@ -10,7 +11,7 @@ type SongContainerState = Record<string, never>
 const styles = {
     root: {
         border: "1px solid black",
-        background: "#44444A",
+        background: colors.objectBackground,
         width: 400,
         display: "flex",
         justifyContent: "space-between",

@@ -1,9 +1,24 @@
-import {Button, withStyles} from "@material-ui/core";
+import {WithStyles, withStyles} from "@material-ui/core";
 import React from "react";
+import colors from "../theme/colors";
 
-const styles = {}
+const styles = {
+    button: {
+        border: "1px solid black",
+        background: colors.objectBackground,
+        color: colors.textColor,
+        fontSize: "2rem",
+        borderRadius: 5,
+        padding: "1rem",
+        "&:hover": {
+            background: colors.objectHoverColor,
+        }
+    }
+}
 
-class AuthorizeButton extends React.Component {
+type AuthorizeButtonProps = WithStyles<typeof styles>;
+
+class AuthorizeButton extends React.Component<AuthorizeButtonProps> {
     authorize_button() {
         window.location.assign(
             "https://accounts.spotify.com/authorize?" +
@@ -16,10 +31,11 @@ class AuthorizeButton extends React.Component {
     }
 
     render() {
+        const { classes } = this.props;
         return (
-            <Button onClick={this.authorize_button}>
+            <button className={classes.button} onClick={this.authorize_button}>
                 Find songs now!
-            </Button>
+            </button>
         )
     }
 }
