@@ -5,6 +5,7 @@ import UserSongPage from './pages/UserSongPage';
 import {createMuiTheme, CssBaseline, MuiThemeProvider} from '@material-ui/core';
 import LandingPage from "./pages/LandingPage";
 import colors from "./theme/colors";
+import Header from "./components/Header";
 
 const theme = createMuiTheme({
     palette: {
@@ -24,6 +25,7 @@ class App extends React.Component {
                 <MuiThemeProvider theme={theme}>
                 <CssBaseline />
                 <Router>
+                    <Header/>
                     <Switch>
                         <Route path="/authorisation_callback">
                             <UserSongPage />
