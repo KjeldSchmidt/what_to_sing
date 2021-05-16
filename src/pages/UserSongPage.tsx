@@ -146,7 +146,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
              <h4 className={classes.header}>
                  Other songs by your top artists:
              </h4>
-             <div className={classes.songsContainer}>
+             <div className={classes.artistsContainer}>
                  {this.state.artistAvailableSongs.map( (artist) => {
                      return (<ArtistContainer key={artist[0].name} artist={artist[0]} songs={artist[1]}/>)
                  })}
@@ -174,6 +174,9 @@ const styles = {
         flexWrap: "wrap" as const,
         justifyContent: "center",
         padding: "2rem"
+    },
+    artistsContainer: {
+        margin: "2rem"
     }
 }
 

@@ -15,9 +15,9 @@ const styles = {
         border: "1px solid black",
         borderRadius: 3,
         background: colors.objectBackground,
-        width: 400,
+        maxWidth: 400,
         padding: "0.5rem",
-        margin: 3,
+        margin: "3px auto",
         textAlign: "center" as const
     },
     title: {
