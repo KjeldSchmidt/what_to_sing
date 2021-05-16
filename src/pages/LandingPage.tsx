@@ -13,7 +13,7 @@ const styles = {
         display: "flex",
         flexDirection: "column" as const,
         justifyContent: "center",
-        height: "100%",
+        height: "calc(100% - 98px - 1rem)",
         width: "100%"
     },
     buttonWrapper: {

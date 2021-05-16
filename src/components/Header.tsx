@@ -24,6 +24,9 @@ const styles = {
         "&:hover": {
             textDecoration: "underline"
         }
+    },
+    imageLink: {
+        height: 48
     }
 }
 
@@ -32,8 +35,8 @@ function Header(props: HeaderProps) : ReactElement{
     const { classes } = props;
     return (
         <header className={classes.root}>
-            <Link className={classes.link} to="/">
-                <img className={classes.logo} src={logo} />
+            <Link className={classes.imageLink} to="/">
+                <img className={classes.logo} src={logo}  alt={"What To Sing Logo"}/>
             </Link>
             <Link className={classes.link} to="/">
                 Home
