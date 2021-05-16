@@ -3,7 +3,7 @@ import React from "react";
 
 const styles = {}
 
-class LandingPage extends React.Component<{}, {}> {
+class LandingPage extends React.Component {
     authorize_button() {
         window.location.assign(
             "https://accounts.spotify.com/authorize?" +

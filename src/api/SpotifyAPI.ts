@@ -43,7 +43,7 @@ class SpotifyAPI {
         this.accessToken = accessToken;
     }
 
-    topTracks( limit: number = 50) : Promise<Song[]> {
+    topTracks( limit = 50) : Promise<Song[]> {
         let remaining = limit;
         let offset = 0;
         const requestCalls : Promise<SpotifySong[]>[] = [];
@@ -68,10 +68,6 @@ class SpotifyAPI {
         })
             .then( (response) => response.json())
             .then( (json) => json.items )
-    }
-
-    playlists() {
-        return this.userPlaylistsRequest();
     }
 
     private async userPlaylistsRequest() : Promise<SpotifyPlaylist[]> {

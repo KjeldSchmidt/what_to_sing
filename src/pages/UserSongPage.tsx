@@ -3,11 +3,9 @@ import SpotifyAPI from "../api/SpotifyAPI";
 import SongCatalog from "../util/SongCatalog";
 import {Song} from "../types/SongType";
 import SongContainer from "../components/SongContainer";
-import {withStyles} from "@material-ui/core";
+import {WithStyles, withStyles} from "@material-ui/core";
 
-type UserSongProps = {
-    classes: any
-}
+type UserSongProps = WithStyles<typeof styles>
 
 type UserSongState = {
     favoriteSongs: Song[],
@@ -88,14 +86,14 @@ const styles = {
     header: {
         fontFamily: "'Arima Madurai', cursive",
         fontSize: "2rem",
-        textAlign: "center" as "center",
+        textAlign: "center" as const,
         marginBottom: 0,
         color: "#FFFFFF"
     },
     songsContainer: {
         display: "flex",
         width: "100%",
-        flexWrap: "wrap" as "wrap",
+        flexWrap: "wrap" as const,
         justifyContent: "center",
         padding: "2rem"
     }

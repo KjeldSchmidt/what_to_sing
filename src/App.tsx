@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import UserSongPage from './pages/UserSongPage';
@@ -17,7 +17,7 @@ const theme = createMuiTheme({
 })
 
 class App extends React.Component {
-    render() {
+    render() : ReactElement {
         return (
             <div className="App">
                 <MuiThemeProvider theme={theme}>

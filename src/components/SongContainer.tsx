@@ -1,12 +1,11 @@
 import React from "react";
 import {Song} from "../types/SongType";
-import {withStyles} from "@material-ui/core";
+import {WithStyles, withStyles} from "@material-ui/core";
 
-type SongContainerProps = {
+interface SongContainerProps extends WithStyles<typeof styles> {
     song: Song,
-    classes: any,
 }
-type SongContainerState = {}
+type SongContainerState = Record<string, never>
 
 const styles = {
     root: {
@@ -33,7 +32,7 @@ class SongContainer extends React.Component<SongContainerProps, SongContainerSta
         const { classes } = this.props;
         return <div className={classes.root}>
             <div>
-                <div className={classes.artist}>{this.props.song.artist}</div>
+                <div>{this.props.song.artist}</div>
                 <div className={classes.title}>{this.props.song.title}</div>
             </div>
             <img
