@@ -17,13 +17,23 @@ type UserSongState = {
 
 class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     private catalog: SongCatalog = new SongCatalog();
-    private spotifyAPI : SpotifyAPI;
+    private readonly spotifyAPI : SpotifyAPI | null = null;
 
     constructor(props: UserSongProps) {
         super(props);
         const hashFragment = window.location.hash;
         const accessToken = hashFragment.slice(1).split('&')[0].split('=')[1];
-        this.spotifyAPI = new SpotifyAPI(accessToken);
+
+        if ( accessToken === undefined ) {
+            this.props.history.push(
+                "/",
+                {
+                    landingMessage: "Authorisation failed. Please try again?"
+                }
+            );
+        } else {
+            this.spotifyAPI = new SpotifyAPI(accessToken);
+        }
 
         this.state = {
             favoriteSongs: [],
@@ -53,30 +63,27 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     }
 
     componentDidMount() {
-        this.spotifyAPI.topTracks(200)
+        if (this.spotifyAPI === null) return;
+
+        const onNotAuthorized = () => {
+            this.props.history.push(
+                "/",
+                {
+                    landingMessage: "Your session has expired. Click below to start again."
+                }
+            );
+        };
+        
+        this.spotifyAPI.topTracks()
             .then(
                 (topTracks: Song[]) => this.addFavoriteSongs(topTracks),
-                () => {
-                    this.props.history.push(
-                        "/",
-                        {
-                            landingMessage: "Your session has expired. Click below to start again."
-                        }
-                    );
-                }
+                onNotAuthorized
             )
 
         this.spotifyAPI.songsFromPlaylists()
             .then(
                 (playlistTracks: Song[]) => this.addFavoriteSongs(playlistTracks),
-                () => {
-                    this.props.history.push(
-                        "/",
-                        {
-                            landingMessage: "Your session has expired. Click below to start again."
-                        }
-                    );
-                }
+                onNotAuthorized
             )
     }
 

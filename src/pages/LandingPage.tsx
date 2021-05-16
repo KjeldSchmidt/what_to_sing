@@ -9,7 +9,7 @@ type RouterStateType = {
 function LandingPage() {
     const { state } = useLocation<RouterStateType>();
     return <div> {
-            state.landingMessage &&
+            state?.landingMessage &&
             <h4>
                 {state.landingMessage}
             </h4>

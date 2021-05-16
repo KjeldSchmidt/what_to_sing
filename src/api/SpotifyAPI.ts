@@ -54,8 +54,9 @@ class SpotifyAPI {
         this.accessToken = accessToken;
     }
 
-    topTracks( limit = 50) : Promise<Song[]> {
-        let remaining = limit;
+    topTracks( limit = 98) : Promise<Song[]> {
+        // Spotify API will not respond with top tracks past Top 99
+        let remaining = Math.min(limit, 98);
         let offset = 0;
         const requestCalls : Promise<SpotifySong[]>[] = [];
         while (remaining > 49) {
