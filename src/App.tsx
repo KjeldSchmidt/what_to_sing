@@ -1,12 +1,9 @@
 import React from 'react';
 
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import UserSongPage from './pages/UserSongPage';
-import {Button, createMuiTheme, CssBaseline, MuiThemeProvider} from '@material-ui/core';
+import {createMuiTheme, CssBaseline, MuiThemeProvider} from '@material-ui/core';
+import LandingPage from "./pages/LandingPage";
 
 const theme = createMuiTheme({
     palette: {
@@ -20,17 +17,6 @@ const theme = createMuiTheme({
 })
 
 class App extends React.Component {
-    authorize_button() {
-        window.location.assign(
-            "https://accounts.spotify.com/authorize?" +
-            `client_id=${encodeURIComponent("a1d12ab8319041b4a34966a7dc86c021")}&` +
-            "response_type=token&" +
-            `redirect_uri=${encodeURIComponent("http://localhost:3000/authorisation_callback")}&` +
-            `scope=${encodeURIComponent("user-library-read playlist-read-private playlist-read-collaborative user-top-read")}`
-
-        );
-    }
-
     render() {
         return (
             <div className="App">
@@ -42,9 +28,7 @@ class App extends React.Component {
                             <UserSongPage/>
                         </Route>
                         <Route path="/">
-                            <Button onClick={this.authorize_button}>
-                                Find songs now!
-                            </Button>
+                            <LandingPage />
                         </Route>
                     </Switch>
                 </Router>
