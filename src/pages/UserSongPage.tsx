@@ -57,12 +57,27 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
             .then(
                 (topTracks: Song[]) => this.addFavoriteSongs(topTracks),
                 () => {
-                    this.props.history.push("/reauthorize");
+                    this.props.history.push(
+                        "/",
+                        {
+                            landingMessage: "Your session has expired. Click below to start again."
+                        }
+                    );
                 }
             )
 
         this.spotifyAPI.songsFromPlaylists()
-            .then( (playlistTracks: Song[]) => this.addFavoriteSongs(playlistTracks))
+            .then(
+                (playlistTracks: Song[]) => this.addFavoriteSongs(playlistTracks),
+                () => {
+                    this.props.history.push(
+                        "/",
+                        {
+                            landingMessage: "Your session has expired. Click below to start again."
+                        }
+                    );
+                }
+            )
     }
 
     render() {
@@ -107,4 +122,4 @@ const styles = {
     }
 }
 
-export default  withRouter( withStyles(styles)(UserSongPage) );
+export default withRouter( withStyles(styles)(UserSongPage) );

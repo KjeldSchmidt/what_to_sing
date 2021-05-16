@@ -115,7 +115,6 @@ class SpotifyAPI {
             .then( (response) => response.json() )
             .then( (json) => json.items )
             .then( (items : PlaylistMember[]) => items.map( item => item.track))
-            .then( track => { console.dir(track); return track; } )
             .then( (songs) => songs.map(SpotifyAPI.toSong))
     }
 

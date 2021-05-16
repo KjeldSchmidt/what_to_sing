@@ -1,20 +1,21 @@
 import AuthorizeButton from "../components/AuthorizeButton";
-import React, {ReactElement} from "react";
+import React from "react";
+import {useLocation, withRouter } from "react-router-dom";
 
-type LandingPageProps = {
-    reauthorize?: boolean
+type RouterStateType = {
+    landingMessage: string
 }
 
-function LandingPage(props: LandingPageProps) : ReactElement {
-    return <div>
-        {
-            props.reauthorize &&
+function LandingPage() {
+    const { state } = useLocation<RouterStateType>();
+    return <div> {
+            state.landingMessage &&
             <h4>
-                Your session has expired. Start again!
+                {state.landingMessage}
             </h4>
         }
-        <AuthorizeButton />
+        <AuthorizeButton/>
     </div>
 }
 
-export default LandingPage;
+export default withRouter( LandingPage );

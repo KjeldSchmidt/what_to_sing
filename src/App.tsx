@@ -27,9 +27,6 @@ class App extends React.Component {
                         <Route path="/authorisation_callback">
                             <UserSongPage />
                         </Route>
-                        <Route path="/reauthorize">
-                            <LandingPage reauthorize={true} />
-                        </Route>
                         <Route path="/">
                             <LandingPage />
                         </Route>
