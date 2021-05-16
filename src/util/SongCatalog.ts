@@ -27,14 +27,16 @@ export default class SongCatalog {
         return songs.filter((song) => this.hasSong(song));
     }
 
-    findByArtists(artists: SpotifyArtist[]) : Song[] {
-        const songs : Song[] = [];
+    findByArtists(artists: SpotifyArtist[]) : [SpotifyArtist, Song[]][] {
+        const songs : [SpotifyArtist, Song[]][] = [];
         artists.forEach( artist => {
             const songsByArtist = this.songs.filter(song => {
                 return artist.name === song.artist
             });
 
-            songs.push(...songsByArtist);
+            if (songsByArtist.length !== 0 ) {
+                songs.push([artist, songsByArtist]);
+            }
         })
 
         return songs;

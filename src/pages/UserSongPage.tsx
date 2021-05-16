@@ -5,6 +5,7 @@ import {Song} from "../types/SongType";
 import SongContainer from "../components/SongContainer";
 import {WithStyles, withStyles} from "@material-ui/core";
 import {RouteComponentProps, withRouter} from "react-router-dom";
+import ArtistContainer from "../components/ArtistContainer";
 
 interface UserSongProps extends WithStyles<typeof styles>, RouteComponentProps {
 
@@ -14,7 +15,7 @@ type UserSongState = {
     checkedSongs: Song[],
     topAvailableSongs: Song[],
     playlistAvailableSongs: Song[],
-    artistAvailableSongs: Song[],
+    artistAvailableSongs: [SpotifyArtist, Song[]][],
 }
 
 class UserSongPage extends React.Component<UserSongProps, UserSongState> {
@@ -66,12 +67,8 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     private addFromArtists(artists: SpotifyArtist[]) {
         const songsByArtist = this.catalog.findByArtists(artists);
 
-        const newSongs = songsByArtist.filter(song => {
-            return !this.state.checkedSongs.includes(song)
-        })
-
         this.setState({
-            artistAvailableSongs: [...this.state.artistAvailableSongs, ...newSongs],
+            artistAvailableSongs: [...this.state.artistAvailableSongs, ...songsByArtist],
         });
     }
 
@@ -150,8 +147,8 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
                  Other songs by your top artists:
              </h4>
              <div className={classes.songsContainer}>
-                 {this.state.artistAvailableSongs.map( (song) => {
-                     return (<SongContainer key={song.artist + song.title} song={song}/>)
+                 {this.state.artistAvailableSongs.map( (artist) => {
+                     return (<ArtistContainer key={artist[0].name} artist={artist[0]} songs={artist[1]}/>)
                  })}
              </div>
          </div>
