@@ -24,7 +24,7 @@ class AuthorizeButton extends React.Component<AuthorizeButtonProps> {
             "https://accounts.spotify.com/authorize?" +
             `client_id=${encodeURIComponent("a1d12ab8319041b4a34966a7dc86c021")}&` +
             "response_type=token&" +
-            `redirect_uri=${encodeURIComponent("http://localhost:3000/authorisation_callback")}&` +
+            `redirect_uri=${encodeURIComponent(`${window.location.href}authorisation_callback`)}&` +
             `scope=${encodeURIComponent("user-library-read playlist-read-private playlist-read-collaborative user-top-read")}`
 
         );
