@@ -37,11 +37,13 @@ class SongContainer extends React.Component<SongContainerProps, SongContainerSta
                 <div>{this.props.song.artist}</div>
                 <div className={classes.title}>{this.props.song.title}</div>
             </div>
-            <img
-                className={classes.albumImage}
-                src={this.props.song.albumArtUrl}
-                alt="Album art for this song"
-            />
+            { this.props.song.albumArtUrl &&
+                <img
+                    className={classes.albumImage}
+                    src={this.props.song.albumArtUrl}
+                    alt="Album art for this song"
+                />
+            }
         </div>;
     }
 }

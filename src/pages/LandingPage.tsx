@@ -7,7 +7,7 @@ import spotifyLogo from '../assets/spotifyLogo.png';
 
 const styles = {
     message: {
-
+        textAlign: "center" as const
     },
     container: {
         display: "flex",

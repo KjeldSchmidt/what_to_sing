@@ -1,5 +1,5 @@
 import React from "react";
-import SpotifyAPI from "../api/SpotifyAPI";
+import SpotifyAPI, {SpotifyArtist} from "../api/SpotifyAPI";
 import SongCatalog from "../util/SongCatalog";
 import {Song} from "../types/SongType";
 import SongContainer from "../components/SongContainer";
@@ -63,6 +63,18 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         });
     }
 
+    private addFromArtists(artists: SpotifyArtist[]) {
+        const songsByArtist = this.catalog.findByArtists(artists);
+
+        const newSongs = songsByArtist.filter(song => {
+            return !this.state.checkedSongs.includes(song)
+        })
+
+        this.setState({
+            artistAvailableSongs: [...this.state.artistAvailableSongs, ...newSongs],
+        });
+    }
+
     private extractNew(songs: Song[]) {
         const newFavorite: Song[] = [];
         songs.forEach(song => {
@@ -79,6 +91,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         const newKaraoke = this.catalog.findMatches(newFavorite);
         return {newFavorite, newKaraoke};
     }
+
 
     componentDidMount() {
         if (this.spotifyAPI === null) return;
@@ -103,6 +116,12 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
                 (playlistTracks: Song[]) => this.addPlaylistSongs(playlistTracks),
                 onNotAuthorized
             )
+
+        this.spotifyAPI.topArtists()
+            .then(
+                artists => this.addFromArtists(artists),
+                onNotAuthorized
+            )
     }
 
     render() {
@@ -117,11 +136,21 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
                      return (<SongContainer key={song.artist + song.title} song={song}/>)
                  })}
              </div>
+
              <h4 className={classes.header}>
                  Songs from your playlists:
              </h4>
              <div className={classes.songsContainer}>
                  {this.state.playlistAvailableSongs.map( (song) => {
+                     return (<SongContainer key={song.artist + song.title} song={song}/>)
+                 })}
+             </div>
+
+             <h4 className={classes.header}>
+                 Other songs by your top artists:
+             </h4>
+             <div className={classes.songsContainer}>
+                 {this.state.artistAvailableSongs.map( (song) => {
                      return (<SongContainer key={song.artist + song.title} song={song}/>)
                  })}
              </div>

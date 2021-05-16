@@ -36,22 +36,26 @@ export type SpotifyPlaylist = {
     }
 }
 
-function authorizedFetch(...input: Parameters<typeof fetch>) : ReturnType<typeof fetch> {
-    return fetch(...input)
-        .then( (response) => {
-        if (response.status ===  401) {
-            return Promise.reject();
-        }
-
-        return response;
-    })
-}
-
 class SpotifyAPI {
     accessToken: string;
 
     constructor(accessToken : string) {
         this.accessToken = accessToken;
+    }
+
+    authorizedFetch(url: string) : ReturnType<typeof fetch> {
+        return fetch( url, {
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        })
+            .then( (response) => {
+                if (response.status ===  401) {
+                    return Promise.reject();
+                }
+
+                return response;
+            })
     }
 
     topTracks( limit = 98) : Promise<Song[]> {
@@ -73,21 +77,13 @@ class SpotifyAPI {
     }
 
     private async topTracksRequest( limit: number, offset: number ) : Promise<SpotifySong[]> {
-        return authorizedFetch(`https://api.spotify.com/v1/me/top/tracks?limit=${limit}&offset=${offset}`, {
-            headers: {
-                'Authorization': `Bearer ${this.accessToken}`
-            }
-        })
+        return this.authorizedFetch(`https://api.spotify.com/v1/me/top/tracks?limit=${limit}&offset=${offset}`)
             .then( (response) => response.json())
             .then( (json) => json.items )
     }
 
     private async userPlaylistsRequest() : Promise<SpotifyPlaylist[]> {
-        return authorizedFetch(`https://api.spotify.com/v1/me/playlists`, {
-            headers: {
-                'Authorization': `Bearer ${this.accessToken}`
-            }
-        })
+        return this.authorizedFetch(`https://api.spotify.com/v1/me/playlists` )
             .then((response) => response.json())
             .then((json) => json.items);
     }
@@ -108,11 +104,7 @@ class SpotifyAPI {
     }
 
     songsFromPlaylist( url: string ) : Promise<Song[]> {
-        return authorizedFetch( url, {
-            headers: {
-                'Authorization': `Bearer ${this.accessToken}`
-            }
-        })
+        return this.authorizedFetch( url )
             .then( (response) => response.json() )
             .then( (json) => json.items )
             .then( (items : PlaylistMember[]) => items.map( item => item.track))
@@ -125,6 +117,12 @@ class SpotifyAPI {
             artist: spotifySong.artists[0].name,
             albumArtUrl: spotifySong.album.images[2].url
         }
+    }
+
+    topArtists() : Promise<SpotifyArtist[]> {
+        return this.authorizedFetch('https://api.spotify.com/v1/me/top/artists?limit=50')
+            .then(response => response.json())
+            .then(json => json.items)
     }
 }
 
