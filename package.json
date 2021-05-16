@@ -2,10 +2,12 @@
   "name": "what_to_sing",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://KjeldSchmidt.github.io/what_to_sing",
   "devDependencies": {
     "eslint": "^7.26.0",
     "@typescript-eslint/parser": "^4.23.0",
-    "@typescript-eslint/eslint-plugin": "^4.23.0"
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "gh-pages": "^3.1.0",
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.12.0",
@@ -30,7 +32,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint:fix": "npx eslint . --fix --ext .js,.jsx,.ts,.tsx"
+    "lint:fix": "npx eslint . --fix --ext .js,.jsx,.ts,.tsx",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
   },
   "eslintConfig": {
     "extends": [
