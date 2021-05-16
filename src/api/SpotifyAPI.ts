@@ -36,6 +36,17 @@ export type SpotifyPlaylist = {
     }
 }
 
+function authorizedFetch(...input: Parameters<typeof fetch>) : ReturnType<typeof fetch> {
+    return fetch(...input)
+        .then( (response) => {
+        if (response.status ===  401) {
+            return Promise.reject();
+        }
+
+        return response;
+    })
+}
+
 class SpotifyAPI {
     accessToken: string;
 
@@ -61,7 +72,7 @@ class SpotifyAPI {
     }
 
     private async topTracksRequest( limit: number, offset: number ) : Promise<SpotifySong[]> {
-        return fetch(`https://api.spotify.com/v1/me/top/tracks?limit=${limit}&offset=${offset}`, {
+        return authorizedFetch(`https://api.spotify.com/v1/me/top/tracks?limit=${limit}&offset=${offset}`, {
             headers: {
                 'Authorization': `Bearer ${this.accessToken}`
             }
@@ -71,7 +82,7 @@ class SpotifyAPI {
     }
 
     private async userPlaylistsRequest() : Promise<SpotifyPlaylist[]> {
-        return fetch(`https://api.spotify.com/v1/me/playlists`, {
+        return authorizedFetch(`https://api.spotify.com/v1/me/playlists`, {
             headers: {
                 'Authorization': `Bearer ${this.accessToken}`
             }
@@ -96,7 +107,7 @@ class SpotifyAPI {
     }
 
     songsFromPlaylist( url: string ) : Promise<Song[]> {
-        return fetch( url, {
+        return authorizedFetch( url, {
             headers: {
                 'Authorization': `Bearer ${this.accessToken}`
             }

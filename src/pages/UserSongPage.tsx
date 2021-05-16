@@ -4,8 +4,11 @@ import SongCatalog from "../util/SongCatalog";
 import {Song} from "../types/SongType";
 import SongContainer from "../components/SongContainer";
 import {WithStyles, withStyles} from "@material-ui/core";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 
-type UserSongProps = WithStyles<typeof styles>
+interface UserSongProps extends WithStyles<typeof styles>, RouteComponentProps {
+
+}
 
 type UserSongState = {
     favoriteSongs: Song[],
@@ -51,7 +54,12 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
 
     componentDidMount() {
         this.spotifyAPI.topTracks(200)
-            .then( (topTracks: Song[]) => this.addFavoriteSongs(topTracks))
+            .then(
+                (topTracks: Song[]) => this.addFavoriteSongs(topTracks),
+                () => {
+                    this.props.history.push("/reauthorize");
+                }
+            )
 
         this.spotifyAPI.songsFromPlaylists()
             .then( (playlistTracks: Song[]) => this.addFavoriteSongs(playlistTracks))
@@ -99,4 +107,4 @@ const styles = {
     }
 }
 
-export default withStyles(styles)(UserSongPage);
+export default  withRouter( withStyles(styles)(UserSongPage) );

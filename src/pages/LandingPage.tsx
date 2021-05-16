@@ -1,27 +1,20 @@
-import {Button, withStyles} from "@material-ui/core";
-import React from "react";
+import AuthorizeButton from "../components/AuthorizeButton";
+import React, {ReactElement} from "react";
 
-const styles = {}
-
-class LandingPage extends React.Component {
-    authorize_button() {
-        window.location.assign(
-            "https://accounts.spotify.com/authorize?" +
-            `client_id=${encodeURIComponent("a1d12ab8319041b4a34966a7dc86c021")}&` +
-            "response_type=token&" +
-            `redirect_uri=${encodeURIComponent("http://localhost:3000/authorisation_callback")}&` +
-            `scope=${encodeURIComponent("user-library-read playlist-read-private playlist-read-collaborative user-top-read")}`
-
-        );
-    }
-
-    render() {
-        return (
-            <Button onClick={this.authorize_button}>
-                Find songs now!
-            </Button>
-        )
-    }
+type LandingPageProps = {
+    reauthorize?: boolean
 }
 
-export default withStyles(styles)(LandingPage);
+function LandingPage(props: LandingPageProps) : ReactElement {
+    return <div>
+        {
+            props.reauthorize &&
+            <h4>
+                Your session has expired. Start again!
+            </h4>
+        }
+        <AuthorizeButton />
+    </div>
+}
+
+export default LandingPage;

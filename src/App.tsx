@@ -25,7 +25,10 @@ class App extends React.Component {
                 <Router>
                     <Switch>
                         <Route path="/authorisation_callback">
-                            <UserSongPage/>
+                            <UserSongPage />
+                        </Route>
+                        <Route path="/reauthorize">
+                            <LandingPage reauthorize={true} />
                         </Route>
                         <Route path="/">
                             <LandingPage />
