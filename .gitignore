@@ -10,7 +10,6 @@
 
 # production
 /build
-src/assets/karafun_catalog.js
 
 # misc
 .DS_Store
