@@ -2,7 +2,6 @@
   "name": "what_to_sing",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://KjeldSchmidt.github.io/what_to_sing",
   "devDependencies": {
     "eslint": "^7.26.0",
     "@typescript-eslint/parser": "^4.23.0",
