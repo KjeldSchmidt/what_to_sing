@@ -34,7 +34,7 @@ class ArtistContainer extends React.Component<ArtistContainerProps, ArtistContai
             </div>
             <div>
                 {this.props.songs.map( (song) => {
-                    return (<div>{song.title}</div>)
+                    return (<div key={song.artist + song.title}>{song.title}</div>)
                 })}
             </div>
         </div>;
