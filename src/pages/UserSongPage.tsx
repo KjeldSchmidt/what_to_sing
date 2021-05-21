@@ -15,7 +15,7 @@ type UserSongState = {
     checkedSongs: Song[],
     topAvailableSongs: Song[],
     playlistAvailableSongs: Song[],
-    artistAvailableSongs: [SpotifyArtist, Song[]][],
+    artistAvailableSongs: Map<SpotifyArtist, Song[]>,
 }
 
 class UserSongPage extends React.Component<UserSongProps, UserSongState> {
@@ -42,7 +42,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
             checkedSongs: [],
             topAvailableSongs: [],
             playlistAvailableSongs: [],
-            artistAvailableSongs: []
+            artistAvailableSongs: new Map<SpotifyArtist, Song[]>()
         }
     }
 
@@ -67,8 +67,14 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     private addFromArtists(artists: SpotifyArtist[]) {
         const songsByArtist = this.catalog.findByArtists(artists);
 
+        this.state.artistAvailableSongs.forEach((songs, artist) => {
+            if (!songsByArtist.has(artist)) {
+                songsByArtist.set(artist, songs);
+            }
+        })
+
         this.setState({
-            artistAvailableSongs: [...this.state.artistAvailableSongs, ...songsByArtist],
+            artistAvailableSongs: songsByArtist,
         });
     }
 
@@ -147,8 +153,8 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
                  Other songs by your top artists:
              </h4>
              <div className={classes.artistsContainer}>
-                 {this.state.artistAvailableSongs.map( (artist) => {
-                     return (<ArtistContainer key={artist[0].name} artist={artist[0]} songs={artist[1]}/>)
+                 {Array.from( this.state.artistAvailableSongs ).map( ([artist, songs]) => {
+                     return (<ArtistContainer key={artist.name} artist={artist} songs={songs}/>)
                  })}
              </div>
          </div>
