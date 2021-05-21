@@ -123,6 +123,7 @@ class SpotifyAPI {
         return this.authorizedFetch('https://api.spotify.com/v1/me/top/artists?limit=50')
             .then(response => response.json())
             .then(json => json.items)
+            .then(items => {console.log("Logging in SpotifyAPI::topArtists"); console.dir(items); return items })
     }
 }
 

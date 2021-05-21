@@ -65,13 +65,20 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     }
 
     private addFromArtists(artists: SpotifyArtist[]) {
+        console.log("Trying to add the following artists on UserSongPage");
+        console.dir(artists);
         const songsByArtist = this.catalog.findByArtists(artists);
+        console.log("Got these results:");
+        console.dir(songsByArtist);
 
         this.state.artistAvailableSongs.forEach((songs, artist) => {
             if (!songsByArtist.has(artist)) {
                 songsByArtist.set(artist, songs);
             }
-        })
+        });
+
+        console.log("After merging with preexisting state:");
+        console.dir(songsByArtist);
 
         this.setState({
             artistAvailableSongs: songsByArtist,
