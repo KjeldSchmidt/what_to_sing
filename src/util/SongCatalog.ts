@@ -28,8 +28,6 @@ export default class SongCatalog {
     }
 
     findByArtists(artists: SpotifyArtist[]) : Map<SpotifyArtist, Song[]> {
-        console.log("SongCatalog is asked to find these artists:");
-        console.dir(artists);
         const songMap = new Map<SpotifyArtist, Song[]>();
 
         if ( !artists ) return songMap;
@@ -43,9 +41,6 @@ export default class SongCatalog {
                 songMap.set(artist, songsByArtist);
             }
         })
-
-        console.log("Returning these results:");
-        console.dir(songMap);
 
         return songMap
     }

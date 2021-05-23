@@ -112,10 +112,16 @@ class SpotifyAPI {
     }
 
     static toSong(spotifySong : SpotifySong ) : Song  {
+        const images = spotifySong.album.images;
+        let imageUrl = "";
+        if (images.length != 0) {
+            imageUrl = images[ images.length - 1 ].url;
+        }
+
         return {
             title: spotifySong.name,
             artist: spotifySong.artists[0].name,
-            albumArtUrl: spotifySong.album.images[2].url
+            albumArtUrl: imageUrl
         }
     }
 
@@ -123,7 +129,6 @@ class SpotifyAPI {
         return this.authorizedFetch('https://api.spotify.com/v1/me/top/artists?limit=50')
             .then(response => response.json())
             .then(json => json.items)
-            .then(items => {console.log("Logging in SpotifyAPI::topArtists"); console.dir(items); return items })
     }
 }
 

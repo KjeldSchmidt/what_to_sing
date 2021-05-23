@@ -65,20 +65,13 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     }
 
     private addFromArtists(artists: SpotifyArtist[]) {
-        console.log("Trying to add the following artists on UserSongPage");
-        console.dir(artists);
         const songsByArtist = this.catalog.findByArtists(artists);
-        console.log("Got these results:");
-        console.dir(songsByArtist);
 
         this.state.artistAvailableSongs.forEach((songs, artist) => {
             if (!songsByArtist.has(artist)) {
                 songsByArtist.set(artist, songs);
             }
         });
-
-        console.log("After merging with preexisting state:");
-        console.dir(songsByArtist);
 
         this.setState({
             artistAvailableSongs: songsByArtist,
@@ -106,7 +99,8 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     componentDidMount() {
         if (this.spotifyAPI === null) return;
 
-        const onNotAuthorized = () => {
+        const onNotAuthorized = (reason : unknown) => {
+            console.dir(reason);
             this.props.history.push(
                 "/",
                 {
@@ -118,19 +112,19 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         this.spotifyAPI.topTracks()
             .then(
                 (topTracks: Song[]) => this.addTopSongs(topTracks),
-                onNotAuthorized
+                reason => onNotAuthorized(reason)
             )
 
         this.spotifyAPI.songsFromPlaylists()
             .then(
                 (playlistTracks: Song[]) => this.addPlaylistSongs(playlistTracks),
-                onNotAuthorized
+                reason => onNotAuthorized(reason)
             )
 
         this.spotifyAPI.topArtists()
             .then(
                 artists => this.addFromArtists(artists),
-                onNotAuthorized
+                reason => onNotAuthorized(reason)
             )
     }
 
