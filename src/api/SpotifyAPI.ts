@@ -82,8 +82,15 @@ class SpotifyAPI {
     }
 
     async savedSongs() : Promise<Song[]> {
-        let url : string | null = "https://api.spotify.com/v1/me/tracks?limit=50";
-        const songs : Song[] = [];
+        return this.fetchAllPages<SavedTrackObject>("https://api.spotify.com/v1/me/tracks?limit=50")
+            .then( savedTracks =>
+                savedTracks.map( (savedTrack : SavedTrackObject ) => savedTrack.track)
+            )
+            .then((songs) => songs.map(SpotifyAPI.toSong));
+    }
+
+    private async fetchAllPages<Type>(url: string) : Promise<Type[]> {
+        const results : Type[] = [];
         do {
             await this.authorizedFetch(url)
                 .then(response => response.json())
@@ -91,12 +98,10 @@ class SpotifyAPI {
                     url = json.next;
                     return json.items;
                 })
-                .then( savedTracks =>
-                    savedTracks.map( (savedTrack : SavedTrackObject ) => savedTrack.track)
-                ).then( tracks => songs.push(...tracks) )
+                .then( items => results.push(...items) )
         } while (url != null);
 
-        return songs;
+        return results;
     }
 
     private async topTracksRequest( limit: number, offset: number ) : Promise<SpotifySong[]> {
@@ -106,9 +111,7 @@ class SpotifyAPI {
     }
 
     private async userPlaylistsRequest() : Promise<SpotifyPlaylist[]> {
-        return this.authorizedFetch(`https://api.spotify.com/v1/me/playlists` )
-            .then((response) => response.json())
-            .then((json) => json.items);
+        return this.fetchAllPages(`https://api.spotify.com/v1/me/playlists?limit=50` )
     }
 
     async songsFromPlaylists() : Promise<Song[]> {
@@ -127,9 +130,7 @@ class SpotifyAPI {
     }
 
     songsFromPlaylist( url: string ) : Promise<Song[]> {
-        return this.authorizedFetch( url )
-            .then( (response) => response.json() )
-            .then( (json) => json.items )
+        return this.fetchAllPages<PlaylistMember>(url)
             .then( (items : PlaylistMember[]) => items.map( item => item.track))
             .then( (songs) => songs.map(SpotifyAPI.toSong))
     }
