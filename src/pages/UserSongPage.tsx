@@ -14,6 +14,7 @@ interface UserSongProps extends WithStyles<typeof styles>, RouteComponentProps {
 type UserSongState = {
     checkedSongs: Song[],
     topAvailableSongs: Song[],
+    savedAvailableSongs: Song[],
     playlistAvailableSongs: Song[],
     artistAvailableSongs: Map<SpotifyArtist, Song[]>,
 }
@@ -41,26 +42,33 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         this.state = {
             checkedSongs: [],
             topAvailableSongs: [],
+            savedAvailableSongs: [],
             playlistAvailableSongs: [],
             artistAvailableSongs: new Map<SpotifyArtist, Song[]>()
         }
     }
 
     addTopSongs(songs: Song[] ) : void {
-        const {newFavorite, newKaraoke} = this.extractNew(songs);
+        const newFromTop = this.extractNew(songs);
 
         this.setState({
-            checkedSongs: [...this.state.checkedSongs, ...newFavorite],
-            topAvailableSongs: [...this.state.topAvailableSongs, ...newKaraoke],
+            topAvailableSongs: [...this.state.topAvailableSongs, ...newFromTop],
         });
     }
 
     addPlaylistSongs(songs: Song[] ) : void {
-        const {newFavorite, newKaraoke} = this.extractNew(songs);
+        const newFromPlaylist = this.extractNew(songs);
 
         this.setState({
-            checkedSongs: [...this.state.checkedSongs, ...newFavorite],
-            playlistAvailableSongs: [...this.state.playlistAvailableSongs, ...newKaraoke],
+            playlistAvailableSongs: [...this.state.playlistAvailableSongs, ...newFromPlaylist],
+        });
+    }
+
+    private addFromSaved(songs: Song[]) {
+        const newSaved = this.extractNew(songs);
+
+        this.setState({
+            savedAvailableSongs: [...this.state.savedAvailableSongs, ...newSaved],
         });
     }
 
@@ -78,8 +86,8 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         });
     }
 
-    private extractNew(songs: Song[]) {
-        const newFavorite: Song[] = [];
+    private extractNew(songs: Song[]) : Song[] {
+        const newSongs: Song[] = [];
         songs.forEach(song => {
             const entryExists = this.state.checkedSongs
                 .some(candidate => {
@@ -87,12 +95,15 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
                 });
 
             if (!entryExists) {
-                newFavorite.push(song)
+                newSongs.push(song)
             }
         });
 
-        const newKaraoke = this.catalog.findMatches(newFavorite);
-        return {newFavorite, newKaraoke};
+        this.setState({
+            checkedSongs: [...this.state.checkedSongs, ...newSongs],
+        });
+
+        return this.catalog.findMatches(newSongs);
     }
 
 
@@ -126,6 +137,12 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
                 artists => this.addFromArtists(artists),
                 reason => onNotAuthorized(reason)
             )
+
+        this.spotifyAPI.savedSongs()
+            .then(
+                songs => this.addFromSaved(songs),
+                reason => onNotAuthorized(reason)
+            )
     }
 
     render() {
@@ -137,6 +154,15 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
              </h4>
              <div className={classes.songsContainer}>
                  {this.state.topAvailableSongs.map( (song) => {
+                     return (<SongContainer key={song.artist + song.title} song={song}/>)
+                 })}
+             </div>
+
+             <h4 className={classes.header}>
+                 From your liked Songs:
+             </h4>
+             <div className={classes.songsContainer}>
+                 {this.state.savedAvailableSongs.map( (song) => {
                      return (<SongContainer key={song.artist + song.title} song={song}/>)
                  })}
              </div>

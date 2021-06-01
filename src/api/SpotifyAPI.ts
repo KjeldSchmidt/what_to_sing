@@ -28,6 +28,11 @@ type PlaylistMember = {
     track: SpotifySong,
 }
 
+type SavedTrackObject = {
+    track: SpotifySong,
+    added_at: Date
+}
+
 export type SpotifyPlaylist = {
     name: string,
     tracks: {
@@ -74,6 +79,24 @@ class SpotifyAPI {
         return Promise.all(requestCalls)
             .then((results) => results.flat())
             .then((songs) => songs.map(SpotifyAPI.toSong))
+    }
+
+    async savedSongs() : Promise<Song[]> {
+        let url : string | null = "https://api.spotify.com/v1/me/tracks?limit=50";
+        const songs : Song[] = [];
+        do {
+            await this.authorizedFetch(url)
+                .then(response => response.json())
+                .then(json => {
+                    url = json.next;
+                    return json.items;
+                })
+                .then( savedTracks =>
+                    savedTracks.map( (savedTrack : SavedTrackObject ) => savedTrack.track)
+                ).then( tracks => songs.push(...tracks) )
+        } while (url != null);
+
+        return songs;
     }
 
     private async topTracksRequest( limit: number, offset: number ) : Promise<SpotifySong[]> {
