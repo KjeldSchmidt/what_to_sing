@@ -1,10 +1,10 @@
 import React from "react";
-import {Song} from "../types/SongType";
 import {WithStyles, withStyles} from "@material-ui/core";
 import colors from "../theme/colors";
+import {SpotifySong} from "../api/SpotifyAPI";
 
 interface SongContainerProps extends WithStyles<typeof styles> {
-    song: Song,
+    song: SpotifySong,
 }
 type SongContainerState = Record<string, never>
 
@@ -31,16 +31,21 @@ const styles = {
 
 class SongContainer extends React.Component<SongContainerProps, SongContainerState>{
     render() {
+        const images = this.props.song.album.images;
+        let imageUrl = null;
+        if (images.length !== 0 ) {
+            imageUrl = images[ images.length - 1].url;
+        }
         const { classes } = this.props;
         return <div className={classes.root}>
             <div>
-                <div>{this.props.song.artist}</div>
-                <div className={classes.title}>{this.props.song.title}</div>
+                <div>{this.props.song.artists[0].name}</div>
+                <div className={classes.title}>{this.props.song.name}</div>
             </div>
-            { this.props.song.albumArtUrl &&
+            { imageUrl &&
                 <img
                     className={classes.albumImage}
-                    src={this.props.song.albumArtUrl}
+                    src={imageUrl}
                     alt="Album art for this song"
                 />
             }

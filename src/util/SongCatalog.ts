@@ -1,6 +1,6 @@
 import {catalog} from '../assets/karafun_catalog'
 import {Song} from "../types/SongType";
-import {SpotifyArtist} from "../api/SpotifyAPI";
+import {SpotifyArtist, SpotifySong} from "../api/SpotifyAPI";
 
 export default class SongCatalog {
     private readonly songs: Song[]
@@ -16,14 +16,14 @@ export default class SongCatalog {
             });
     }
 
-    hasSong( song: Song ): boolean {
+    hasSong( song: SpotifySong ): boolean {
         return this.songs
             .some( candidate => {
-                return song.artist === candidate.artist && song.title === candidate.title
+                return song.artists[0].name === candidate.artist && song.name === candidate.title
             });
     }
 
-    findMatches( songs: Song[] ) : Song[] {
+    findMatches( songs: SpotifySong[] ) : SpotifySong[] {
         return songs.filter((song) => this.hasSong(song));
     }
 

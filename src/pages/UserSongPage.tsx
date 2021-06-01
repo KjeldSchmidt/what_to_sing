@@ -1,21 +1,21 @@
 import React from "react";
-import SpotifyAPI, {SpotifyArtist} from "../api/SpotifyAPI";
+import SpotifyAPI, {SpotifyArtist, SpotifySong} from "../api/SpotifyAPI";
 import SongCatalog from "../util/SongCatalog";
-import {Song} from "../types/SongType";
 import SongContainer from "../components/SongContainer";
 import {WithStyles, withStyles} from "@material-ui/core";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import ArtistContainer from "../components/ArtistContainer";
+import {Song} from "../types/SongType";
 
 interface UserSongProps extends WithStyles<typeof styles>, RouteComponentProps {
 
 }
 
 type UserSongState = {
-    checkedSongs: Song[],
-    topAvailableSongs: Song[],
-    savedAvailableSongs: Song[],
-    playlistAvailableSongs: Song[],
+    checkedSongs: SpotifySong[],
+    topAvailableSongs: SpotifySong[],
+    savedAvailableSongs: SpotifySong[],
+    playlistAvailableSongs: SpotifySong[],
     artistAvailableSongs: Map<SpotifyArtist, Song[]>,
 }
 
@@ -48,7 +48,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         }
     }
 
-    addTopSongs(songs: Song[] ) : void {
+    addTopSongs(songs: SpotifySong[] ) : void {
         const newFromTop = this.extractNew(songs);
 
         this.setState({
@@ -56,7 +56,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         });
     }
 
-    addPlaylistSongs(songs: Song[] ) : void {
+    addPlaylistSongs(songs: SpotifySong[] ) : void {
         const newFromPlaylist = this.extractNew(songs);
 
         this.setState({
@@ -64,7 +64,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         });
     }
 
-    private addFromSaved(songs: Song[]) {
+    private addFromSaved(songs: SpotifySong[]) {
         const newSaved = this.extractNew(songs);
 
         this.setState({
@@ -86,12 +86,12 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         });
     }
 
-    private extractNew(songs: Song[]) : Song[] {
-        const newSongs: Song[] = [];
+    private extractNew(songs: SpotifySong[]) : SpotifySong[] {
+        const newSongs: SpotifySong[] = [];
         songs.forEach(song => {
             const entryExists = this.state.checkedSongs
                 .some(candidate => {
-                    return song.artist === candidate.artist && song.title === candidate.title
+                    return song.id == candidate.id;
                 });
 
             if (!entryExists) {
@@ -122,13 +122,13 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
 
         this.spotifyAPI.topTracks()
             .then(
-                (topTracks: Song[]) => this.addTopSongs(topTracks),
+                (topTracks: SpotifySong[]) => this.addTopSongs(topTracks),
                 reason => onNotAuthorized(reason)
             )
 
         this.spotifyAPI.songsFromPlaylists()
             .then(
-                (playlistTracks: Song[]) => this.addPlaylistSongs(playlistTracks),
+                (playlistTracks: SpotifySong[]) => this.addPlaylistSongs(playlistTracks),
                 reason => onNotAuthorized(reason)
             )
 
@@ -154,7 +154,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
              </h4>
              <div className={classes.songsContainer}>
                  {this.state.topAvailableSongs.map( (song) => {
-                     return (<SongContainer key={song.artist + song.title} song={song}/>)
+                     return (<SongContainer key={song.id} song={song}/>)
                  })}
              </div>
 
@@ -163,7 +163,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
              </h4>
              <div className={classes.songsContainer}>
                  {this.state.savedAvailableSongs.map( (song) => {
-                     return (<SongContainer key={song.artist + song.title} song={song}/>)
+                     return (<SongContainer key={song.id} song={song}/>)
                  })}
              </div>
 
@@ -172,7 +172,7 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
              </h4>
              <div className={classes.songsContainer}>
                  {this.state.playlistAvailableSongs.map( (song) => {
-                     return (<SongContainer key={song.artist + song.title} song={song}/>)
+                     return (<SongContainer key={song.id} song={song}/>)
                  })}
              </div>
 

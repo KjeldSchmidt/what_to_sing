@@ -1,8 +1,8 @@
 import React from "react";
-import {Song} from "../types/SongType";
 import {WithStyles, withStyles} from "@material-ui/core";
 import colors from "../theme/colors";
 import {SpotifyArtist} from "../api/SpotifyAPI";
+import {Song} from "../types/SongType";
 
 interface ArtistContainerProps extends WithStyles<typeof styles> {
     songs: Song[],

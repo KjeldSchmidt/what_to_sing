@@ -1,5 +1,3 @@
-import {Song} from "../types/SongType";
-
 export type SpotifyArtist = {
     name: string,
     id: string,
@@ -22,6 +20,9 @@ export type SpotifySong = {
     id: string,
     popularity: number
     album: SpotifyAlbum
+    external_urls: {
+        spotify: string
+    }
 }
 
 type PlaylistMember = {
@@ -63,7 +64,7 @@ class SpotifyAPI {
             })
     }
 
-    topTracks( limit = 98) : Promise<Song[]> {
+    topTracks( limit = 98) : Promise<SpotifySong[]> {
         // Spotify API will not respond with top tracks past Top 99
         let remaining = Math.min(limit, 98);
         let offset = 0;
@@ -77,16 +78,14 @@ class SpotifyAPI {
         requestCalls.push( this.topTracksRequest(remaining, offset) )
 
         return Promise.all(requestCalls)
-            .then((results) => results.flat())
-            .then((songs) => songs.map(SpotifyAPI.toSong))
+            .then((results) => results.flat());
     }
 
-    async savedSongs() : Promise<Song[]> {
+    async savedSongs() : Promise<SpotifySong[]> {
         return this.fetchAllPages<SavedTrackObject>("https://api.spotify.com/v1/me/tracks?limit=50")
             .then( savedTracks =>
                 savedTracks.map( (savedTrack : SavedTrackObject ) => savedTrack.track)
-            )
-            .then((songs) => songs.map(SpotifyAPI.toSong));
+            );
     }
 
     private async fetchAllPages<Type>(url: string) : Promise<Type[]> {
@@ -114,39 +113,24 @@ class SpotifyAPI {
         return this.fetchAllPages(`https://api.spotify.com/v1/me/playlists?limit=50` )
     }
 
-    async songsFromPlaylists() : Promise<Song[]> {
+    async songsFromPlaylists() : Promise<SpotifySong[]> {
         const trackUrls = await this.userPlaylistsRequest()
             .then((playlists) =>
                 playlists.map( (playlist) => playlist.tracks.href )
             )
 
-        const trackCalls : Promise<Song[]>[] = []
+        const trackCalls : Promise<SpotifySong[]>[] = []
         trackUrls.forEach( (trackUrl) => {
             trackCalls.push( this.songsFromPlaylist(trackUrl) );
         });
 
         return Promise.all(trackCalls)
-            .then((results) => results.flat())
+            .then((results) => results.flat());
     }
 
-    songsFromPlaylist( url: string ) : Promise<Song[]> {
+    songsFromPlaylist( url: string ) : Promise<SpotifySong[]> {
         return this.fetchAllPages<PlaylistMember>(url)
             .then( (items : PlaylistMember[]) => items.map( item => item.track))
-            .then( (songs) => songs.map(SpotifyAPI.toSong))
-    }
-
-    static toSong(spotifySong : SpotifySong ) : Song  {
-        const images = spotifySong.album.images;
-        let imageUrl = "";
-        if (images.length != 0) {
-            imageUrl = images[ images.length - 1 ].url;
-        }
-
-        return {
-            title: spotifySong.name,
-            artist: spotifySong.artists[0].name,
-            albumArtUrl: imageUrl
-        }
     }
 
     topArtists() : Promise<SpotifyArtist[]> {
