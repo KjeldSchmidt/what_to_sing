@@ -12,7 +12,6 @@ interface UserSongProps extends WithStyles<typeof styles>, RouteComponentProps {
 }
 
 type UserSongState = {
-    checkedSongs: SpotifySong[],
     topAvailableSongs: SpotifySong[],
     savedAvailableSongs: SpotifySong[],
     playlistAvailableSongs: SpotifySong[],
@@ -22,10 +21,12 @@ type UserSongState = {
 class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     private catalog: SongCatalog = new SongCatalog();
     private readonly spotifyAPI : SpotifyAPI | null = null;
+    private checkedSongs: SpotifySong[] = [];
+
 
     constructor(props: UserSongProps) {
         super(props);
-        const hashFragment = window.location.hash;
+        const hashFragment = this.props.history.location.hash;
         const accessToken = hashFragment.slice(1).split('&')[0].split('=')[1];
 
         if ( accessToken === undefined ) {
@@ -40,7 +41,6 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         }
 
         this.state = {
-            checkedSongs: [],
             topAvailableSongs: [],
             savedAvailableSongs: [],
             playlistAvailableSongs: [],
@@ -87,23 +87,20 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     }
 
     private extractNew(songs: SpotifySong[]) : SpotifySong[] {
-        const newSongs: SpotifySong[] = [];
-        songs.forEach(song => {
-            const entryExists = this.state.checkedSongs
-                .some(candidate => {
-                    return song.id == candidate.id;
-                });
+        const uncheckedSongs: SpotifySong[] = [];
+
+        songs.forEach( song => {
+            const entryExists = this.checkedSongs.some(candidate => {
+                return song.id == candidate.id;
+            });
 
             if (!entryExists) {
-                newSongs.push(song)
+                this.checkedSongs.push( song );
+                uncheckedSongs.push( song )
             }
         });
 
-        this.setState({
-            checkedSongs: [...this.state.checkedSongs, ...newSongs],
-        });
-
-        return this.catalog.findMatches(newSongs);
+        return this.catalog.findMatches( uncheckedSongs );
     }
 
 
@@ -111,7 +108,6 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
         if (this.spotifyAPI === null) return;
 
         const onNotAuthorized = (reason : unknown) => {
-            console.dir(reason);
             this.props.history.push(
                 "/",
                 {

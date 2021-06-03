@@ -114,14 +114,14 @@ class SpotifyAPI {
     }
 
     async songsFromPlaylists() : Promise<SpotifySong[]> {
-        const trackUrls = await this.userPlaylistsRequest()
+        const playlistTracksUrls = await this.userPlaylistsRequest()
             .then((playlists) =>
                 playlists.map( (playlist) => playlist.tracks.href )
             )
 
         const trackCalls : Promise<SpotifySong[]>[] = []
-        trackUrls.forEach( (trackUrl) => {
-            trackCalls.push( this.songsFromPlaylist(trackUrl) );
+        playlistTracksUrls.forEach( (playlistTracksUrl) => {
+            trackCalls.push( this.songsFromPlaylist(playlistTracksUrl) );
         });
 
         return Promise.all(trackCalls)
