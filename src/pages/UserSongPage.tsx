@@ -107,7 +107,8 @@ class UserSongPage extends React.Component<UserSongProps, UserSongState> {
     componentDidMount() {
         if (this.spotifyAPI === null) return;
 
-        const onNotAuthorized = () => {
+        const onNotAuthorized = (reason : unknown) => {
+            console.log(reason);
             this.props.history.push(
                 "/",
                 {
