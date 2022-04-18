@@ -7,11 +7,14 @@ export default class SongCatalog {
 
     constructor() {
         this.songs = catalog.split('\n')
+            .filter( (value) => value !== "")
             .map((line) => line.split(';'))
             .map( ( splitLine ) => {
                 return {
                     artist: splitLine[0],
-                    title: splitLine[1]
+                    title: splitLine[1],
+                    lowercaseArtist: splitLine[0].toLowerCase(),
+                    lowercaseTitle: splitLine[1].toLowerCase(),
                 }
             });
     }
@@ -19,7 +22,8 @@ export default class SongCatalog {
     hasSong( song: SpotifySong ): boolean {
         return this.songs
             .some( candidate => {
-                return song.artists[0].name === candidate.artist && song.name === candidate.title
+                return song.artists[0].name.toLowerCase() === candidate.lowercaseArtist
+                    && song.name.toLowerCase() === candidate.lowercaseTitle
             });
     }
 
@@ -30,11 +34,9 @@ export default class SongCatalog {
     findByArtists(artists: SpotifyArtist[]) : Map<SpotifyArtist, Song[]> {
         const songMap = new Map<SpotifyArtist, Song[]>();
 
-        if ( !artists ) return songMap;
-
         artists.forEach( artist => {
             const songsByArtist = this.songs.filter(song => {
-                return artist.name === song.artist
+                return artist.name.toLowerCase() === song.lowercaseArtist
             });
 
             if (songsByArtist.length !== 0 ) {

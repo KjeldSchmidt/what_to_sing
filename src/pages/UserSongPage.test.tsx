@@ -3,10 +3,10 @@ import UserSongPage from "./UserSongPage";
 import React from "react";
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17'
 import { Router } from 'react-router-dom';
-jest.mock('../api/SpotifyAPI');
 import SpotifyAPI, {SpotifySong} from "../api/SpotifyAPI";
 import { createMemoryHistory } from 'history'
 import SongContainer from "../components/SongContainer";
+jest.mock('../api/SpotifyAPI');
 
 configure({adapter: new Adapter()});
 

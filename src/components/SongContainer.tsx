@@ -42,7 +42,7 @@ class SongContainer extends React.Component<SongContainerProps, SongContainerSta
                 <div>{this.props.song.artists[0].name}</div>
                 <div className={classes.title}>{this.props.song.name}</div>
             </div>
-            { imageUrl &&
+            { (imageUrl != null) &&
                 <img
                     className={classes.albumImage}
                     src={imageUrl}
